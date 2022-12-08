@@ -30,3 +30,18 @@ th, td {
     background-color: black;
     color: white;
 }
+
+#heads, #tails {
+    float: left;
+    margin: 20px;
+    padding: 20px;
+    border-radius: 30px;
+}
+
+#heads {
+    background-color: rgba(255, 0, 0, 1);
+}
+
+#tails {
+    background-color: rgba(0, 0, 255, 1);
+}
