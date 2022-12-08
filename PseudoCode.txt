@@ -1,0 +1,55 @@
+    ***START***
+
+Screen renders grid, columns 1-10, rows A-J
+    function drawScreen {
+        Use CSS Grid Layout
+    }
+User picks which battleship to place on the grid, choice from five battleships (1x5, 1x4, 2x3, 1x2)
+    function placeBattleships {
+        Assign battleships to grid, keep on screen
+    }
+User confirms placement
+    function storeBattleshipPositions {
+        Stores all coordinate of battleships in object array
+    }
+User picks heads/tails
+Coin flips, if user is correct, user goes first, else computer goes first
+    function coinToss {
+        Use random math to assign a heads to <0.5 and tails to over >= 0.5
+        Assign winner as picked
+    }
+
+
+
+
+
+
+    ***PLAYER TURN***
+
+Player clicks a coordinate
+    function hitOrMiss {
+        Check if coordinate equals any element in storeBattleshipPositions
+    }
+    if hit {
+        Render hit
+        Mark position as hit in object
+    } else if miss {
+        Render miss
+    }
+
+
+
+
+
+    ***WINNING THE GAME***
+if all elements in object are marked as hit, opponent wins
+
+
+
+
+
+
+    ***PC AI***
+Use random math to generate a coordinate for column and row
+//if have time, add easy/medium/hard AI
+
