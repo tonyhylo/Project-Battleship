@@ -45,3 +45,7 @@ th, td {
 #tails {
     background-color: rgba(0, 0, 255, 1);
 }
+
+#msg {
+    text-align: center;
+}
