@@ -218,6 +218,22 @@ document.querySelectorAll(".board-grid").forEach(function (currentValue) {
                         yCoord = yCoord - 1;
                     }
                 })
+            } else {
+                console.log("horizontal for sure");
+                let yCoordNewPosi = newPosition.charAt(0).charCodeAt(0);
+                let yCoord = yCoordNewPosi;
+                console.log(`ycoord ${String.fromCharCode(yCoord)}`)
+                let yCoordNewDirec = newDirection.charAt(0).charCodeAt(0);
+                shipA5.location.forEach(function(curVal, index) {
+                    curVal = String.fromCharCode(yCoord) + newPosition.charAt(1);
+                    shipA5.location[index] = curVal;
+                    console.log(99, curVal);
+                    if (yCoordNewPosi < yCoordNewDirec) {
+                        yCoord = yCoord + 1;
+                    } else {
+                        yCoord = yCoord - 1;
+                    }
+                })
             }
             renderColour(shipA5);
             renderColourDelete(shipA5Delete);
