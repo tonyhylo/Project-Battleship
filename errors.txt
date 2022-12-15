@@ -2,3 +2,6 @@
 2   Repeat click after selecting ship
 3   Overlapping moving same ship vertically to horizontally (like a cross)
 4   Possibly intersecting another ship
+5   Overlapping perpendicular
+6   shipE2 doesn't work
+        Fixed, declared wrong initial shipE2Delete length

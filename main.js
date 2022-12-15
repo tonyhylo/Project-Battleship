@@ -130,12 +130,52 @@ function horizontalOrVertical(first, second) {
   let firstChar = first.charAt(0);
   let secondChar = second.charAt(0);
   if (firstChar == secondChar) {
-    console.log("v");
     return "v";
   } else {
-    console.log("h");
     return "h";
   }
+}
+
+function moveShip(horizOrVerti, movedShip, movedShipDelete) {
+  if (horizOrVerti == "v") {
+    let yCoordNewPosi = Number(newPosition.charAt(1));
+    let yCoord = yCoordNewPosi;
+    let yCoordNewDirec = Number(newDirection.charAt(1));
+    movedShip.location.forEach(function (curVal, index) {
+      curVal = newPosition.charAt(0) + yCoord;
+      movedShip.location[index] = curVal;
+      if (yCoordNewPosi < yCoordNewDirec) {
+        yCoord = yCoord + 1;
+      } else {
+        yCoord = yCoord - 1;
+      }
+    });
+  } else {
+    let yCoordNewPosi = newPosition.charAt(0).charCodeAt(0);
+    let yCoord = yCoordNewPosi;
+    let yCoordNewDirec = newDirection.charAt(0).charCodeAt(0);
+    movedShip.location.forEach(function (curVal, index) {
+      curVal = String.fromCharCode(yCoord) + newPosition.charAt(1);
+      movedShip.location[index] = curVal;
+      if (yCoordNewPosi < yCoordNewDirec) {
+        yCoord = yCoord + 1;
+      } else {
+        yCoord = yCoord - 1;
+      }
+    });
+  }
+  renderColour(movedShip);
+  renderColourDelete(movedShipDelete);
+  followAllShips();
+}
+
+function shipHitOrMiss(bShip) {
+    bShip.location.forEach(function (hitOrMissLocation, hitOrMissLocationIndex) {
+        if (currentClick == hitOrMissLocation) {
+            bShip.ship[hitOrMissLocationIndex] = -1;
+            renderColour(bShip);
+        }
+    });
 }
 
 //Initialize first run
@@ -148,8 +188,8 @@ let shipA5Delete = new BattleshipDelete(5);
 let shipB4Delete = new BattleshipDelete(4);
 let shipC3Delete = new BattleshipDelete(3);
 let shipD3Delete = new BattleshipDelete(3);
-let shipE2Delete = new BattleshipDelete(3);
-let gameStatus = 0; // 0 = new game (place ships), 1 = player turn, -1 = pc turn
+let shipE2Delete = new BattleshipDelete(2);
+let gameStatus = 0; // 0 = new game (place ships), 1 = player turn, -1 = pc turn, 2 = game over start new game
 iniShipLocation();
 followAllShips();
 renderColourAll();
@@ -169,79 +209,90 @@ document.querySelectorAll(".board-grid").forEach(function (currentValue) {
           if (currVal == currentClick) {
             currentShip = "shipA5";
             placingShips = 1;
-            console.log(currentShip);
+          }
+        });
+        shipB4.location.forEach(function (currVal) {
+          if (currVal == currentClick) {
+            currentShip = "shipB4";
+            placingShips = 1;
+          }
+        });
+        shipC3.location.forEach(function (currVal) {
+          if (currVal == currentClick) {
+            currentShip = "shipC3";
+            placingShips = 1;
+          }
+        });
+        shipD3.location.forEach(function (currVal) {
+          if (currVal == currentClick) {
+            currentShip = "shipD3";
+            placingShips = 1;
+          }
+        });
+        shipE2.location.forEach(function (currVal) {
+          if (currVal == currentClick) {
+            currentShip = "shipE2";
+            placingShips = 1;
           }
         });
       } else if (placingShips == 1) {
         // Gets second click to determine new position
         newPosition = currentClick;
         placingShips = 2;
-        console.log(`currentShip: ${currentShip}, newPosition ${newPosition}`);
       } else if (placingShips == 2) {
         // Gets third click to determine direction
         newDirection = currentClick;
-        console.log(
-          `currentShip: ${currentShip}, newPosition: ${newPosition}, newDirection: ${newDirection}`
-        );
         placingShips = 3;
-      } else { // Render new positions
-        // let horizOrVerti = horizontalOrVertical(newPosition, newDirection);
-        // if (currentShip == "shipA5") {
-        //     if (horizOrVerti == "v") {
-        //         let yCoord = newPosition.charAt(1);
-        //         shipA5.location.forEach(function(curVal) {
-        //             curVal = newPosition.charAt(0) + yCoord;
-        //             yCoord = yCoord + 1;
-        //             console.log ("finished");
-        //         })
-        //     }
-        // }
       }
-      console.log(`value of placingShips is ${placingShips}`);
       if (placingShips == 3) {
-        console.log(`newPosition is ${newPosition} and newDirection is ${newDirection}`)
         let horizOrVerti = horizontalOrVertical(newPosition, newDirection);
-        console.log (`currentShip is ${currentShip}, and direction is ${horizOrVerti}`)
         if (currentShip == "shipA5") {
-            if (horizOrVerti == "v") {
-                console.log("vertical for sure");
-                let yCoordNewPosi = Number(newPosition.charAt(1));
-                let yCoord = yCoordNewPosi;
-                let yCoordNewDirec = Number(newDirection.charAt(1));
-                shipA5.location.forEach(function(curVal, index) {
-                    curVal = newPosition.charAt(0) + yCoord;
-                    shipA5.location[index] = curVal;
-                    console.log(99, curVal);
-                    if (yCoordNewPosi < yCoordNewDirec) {
-                        yCoord = yCoord + 1;
-                    } else {
-                        yCoord = yCoord - 1;
-                    }
-                })
-            } else {
-                console.log("horizontal for sure");
-                let yCoordNewPosi = newPosition.charAt(0).charCodeAt(0);
-                let yCoord = yCoordNewPosi;
-                console.log(`ycoord ${String.fromCharCode(yCoord)}`)
-                let yCoordNewDirec = newDirection.charAt(0).charCodeAt(0);
-                shipA5.location.forEach(function(curVal, index) {
-                    curVal = String.fromCharCode(yCoord) + newPosition.charAt(1);
-                    shipA5.location[index] = curVal;
-                    console.log(99, curVal);
-                    if (yCoordNewPosi < yCoordNewDirec) {
-                        yCoord = yCoord + 1;
-                    } else {
-                        yCoord = yCoord - 1;
-                    }
-                })
-            }
-            renderColour(shipA5);
-            renderColourDelete(shipA5Delete);
-            followAllShips();
+          moveShip(horizOrVerti, shipA5, shipA5Delete);
+        } else if (currentShip == "shipB4") {
+          moveShip(horizOrVerti, shipB4, shipB4Delete);
+        } else if (currentShip == "shipC3") {
+          moveShip(horizOrVerti, shipC3, shipC3Delete);
+        } else if (currentShip == "shipD3") {
+          moveShip(horizOrVerti, shipD3, shipD3Delete);
+        } else if (currentShip == "shipE2") {
+          moveShip(horizOrVerti, shipE2, shipE2Delete);
         }
         placingShips = 0;
       }
+    } else if (gameStatus == 1) {
+        // Check if click got hit
+        shipHitOrMiss(shipA5);
+        shipHitOrMiss(shipB4);
+        shipHitOrMiss(shipC3);
+        shipHitOrMiss(shipD3);
+        shipHitOrMiss(shipE2);
+        // Check if game over
+        let shipA5Result = shipA5.ship.reduce(function(accumulator, cV) {
+            return accumulator + cV;
+        })
+        let shipB4Result = shipB4.ship.reduce(function(accumulator, cV) {
+            return accumulator + cV;
+        })
+        let shipC3Result = shipC3.ship.reduce(function(accumulator, cV) {
+            return accumulator + cV;
+        })
+        let shipD3Result = shipD3.ship.reduce(function(accumulator, cV) {
+            return accumulator + cV;
+        })
+        let shipE2Result = shipE2.ship.reduce(function(accumulator, cV) {
+            return accumulator + cV;
+        })
+        let gameOver = shipA5Result + shipB4Result + shipC3Result + shipD3Result + shipE2Result;
+        if (gameOver == -17) {
+            console.log("game over");
+        }
     }
-    console.log(currentClick);
   });
 });
+document
+  .getElementById("btn")
+  .addEventListener("click", function (currentValue) {
+    gameStatus = 1;
+    this.remove();
+  });
+
