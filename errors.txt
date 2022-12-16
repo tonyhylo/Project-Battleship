@@ -1,7 +1,10 @@
 1   Off grid
+        Fixed, function offGrid
 2   Repeat click after selecting ship
+        Fixed, error trapped at newDirection == newPosition at second click
 3   Overlapping moving same ship vertically to horizontally (like a cross)
 4   Possibly intersecting another ship
 5   Overlapping perpendicular
 6   shipE2 doesn't work
         Fixed, declared wrong initial shipE2Delete length
+7   Moving ship in line

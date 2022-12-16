@@ -170,12 +170,47 @@ function moveShip(horizOrVerti, movedShip, movedShipDelete) {
 }
 
 function shipHitOrMiss(bShip) {
-    bShip.location.forEach(function (hitOrMissLocation, hitOrMissLocationIndex) {
-        if (currentClick == hitOrMissLocation) {
-            bShip.ship[hitOrMissLocationIndex] = -1;
-            renderColour(bShip);
-        }
-    });
+  bShip.location.forEach(function (hitOrMissLocation, hitOrMissLocationIndex) {
+    if (currentClick == hitOrMissLocation) {
+      bShip.ship[hitOrMissLocationIndex] = -1;
+      renderColour(bShip);
+    }
+  });
+}
+
+function offGrid(horizOrVerti, bShip) {
+  if (horizOrVerti == "v") {
+    if (Number(newPosition.charAt(1)) < Number(newDirection.charAt(1))) {
+      if (Number(newPosition.charAt(1)) + bShip.length > 10) {
+        console.log("over, pick ship");
+        placingShips = 0;
+        return false;
+      }
+    } else {
+      if (Number(newPosition.charAt(1)) - bShip.length < -1) {
+        console.log("under, pick ship");
+        placingShips = 0;
+        return false;
+      }
+    }
+  } else {
+    if (
+      newPosition.charAt(0).charCodeAt(0) < newDirection.charAt(0).charCodeAt(0)
+    ) {
+      if (newPosition.charAt(0).charCodeAt(0) + bShip.length > 75) {
+        console.log("over, pick ship");
+        placingShips = 0;
+        return false;
+      }
+    } else {
+      if (newPosition.charAt(0).charCodeAt(0) - bShip.length < 64) {
+        console.log("under, pick ship");
+        placingShips = 0;
+        return false;
+      }
+    }
+  }
+  return true;
 }
 
 //Initialize first run
@@ -242,50 +277,69 @@ document.querySelectorAll(".board-grid").forEach(function (currentValue) {
       } else if (placingShips == 2) {
         // Gets third click to determine direction
         newDirection = currentClick;
-        placingShips = 3;
+        if (newPosition == newDirection) {
+          console.log("cannot double click new direction, select new ship");
+        } else {
+          placingShips = 3;
+        }
       }
       if (placingShips == 3) {
         let horizOrVerti = horizontalOrVertical(newPosition, newDirection);
         if (currentShip == "shipA5") {
-          moveShip(horizOrVerti, shipA5, shipA5Delete);
+          if (offGrid(horizOrVerti, shipA5)) {
+            moveShip(horizOrVerti, shipA5, shipA5Delete);
+          }
         } else if (currentShip == "shipB4") {
-          moveShip(horizOrVerti, shipB4, shipB4Delete);
+          if (offGrid(horizOrVerti, shipB4)) {
+            moveShip(horizOrVerti, shipB4, shipB4Delete);
+          }
         } else if (currentShip == "shipC3") {
-          moveShip(horizOrVerti, shipC3, shipC3Delete);
+          if (offGrid(horizOrVerti, shipC3)) {
+            moveShip(horizOrVerti, shipC3, shipC3Delete);
+          }
         } else if (currentShip == "shipD3") {
-          moveShip(horizOrVerti, shipD3, shipD3Delete);
+          if (offGrid(horizOrVerti, shipD3)) {
+            moveShip(horizOrVerti, shipD3, shipD3Delete);
+          }
         } else if (currentShip == "shipE2") {
-          moveShip(horizOrVerti, shipE2, shipE2Delete);
+          if (offGrid(horizOrVerti, shipE2)) {
+            moveShip(horizOrVerti, shipE2, shipE2Delete);
+          }
         }
         placingShips = 0;
       }
     } else if (gameStatus == 1) {
-        // Check if click got hit
-        shipHitOrMiss(shipA5);
-        shipHitOrMiss(shipB4);
-        shipHitOrMiss(shipC3);
-        shipHitOrMiss(shipD3);
-        shipHitOrMiss(shipE2);
-        // Check if game over
-        let shipA5Result = shipA5.ship.reduce(function(accumulator, cV) {
-            return accumulator + cV;
-        })
-        let shipB4Result = shipB4.ship.reduce(function(accumulator, cV) {
-            return accumulator + cV;
-        })
-        let shipC3Result = shipC3.ship.reduce(function(accumulator, cV) {
-            return accumulator + cV;
-        })
-        let shipD3Result = shipD3.ship.reduce(function(accumulator, cV) {
-            return accumulator + cV;
-        })
-        let shipE2Result = shipE2.ship.reduce(function(accumulator, cV) {
-            return accumulator + cV;
-        })
-        let gameOver = shipA5Result + shipB4Result + shipC3Result + shipD3Result + shipE2Result;
-        if (gameOver == -17) {
-            console.log("game over");
-        }
+      // Check if click got hit
+      shipHitOrMiss(shipA5);
+      shipHitOrMiss(shipB4);
+      shipHitOrMiss(shipC3);
+      shipHitOrMiss(shipD3);
+      shipHitOrMiss(shipE2);
+      // Check if game over
+      let shipA5Result = shipA5.ship.reduce(function (accumulator, cV) {
+        return accumulator + cV;
+      });
+      let shipB4Result = shipB4.ship.reduce(function (accumulator, cV) {
+        return accumulator + cV;
+      });
+      let shipC3Result = shipC3.ship.reduce(function (accumulator, cV) {
+        return accumulator + cV;
+      });
+      let shipD3Result = shipD3.ship.reduce(function (accumulator, cV) {
+        return accumulator + cV;
+      });
+      let shipE2Result = shipE2.ship.reduce(function (accumulator, cV) {
+        return accumulator + cV;
+      });
+      let gameOver =
+        shipA5Result +
+        shipB4Result +
+        shipC3Result +
+        shipD3Result +
+        shipE2Result;
+      if (gameOver == -17) {
+        console.log("game over");
+      }
     }
   });
 });
@@ -295,4 +349,3 @@ document
     gameStatus = 1;
     this.remove();
   });
-
