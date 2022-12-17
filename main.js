@@ -129,7 +129,11 @@ function findShip() {
 function horizontalOrVertical(first, second) {
   let firstChar = first.charAt(0);
   let secondChar = second.charAt(0);
-  if (firstChar == secondChar) {
+  let firstNum = first.charAt(1);
+  let secondNum = second.charAt(1);
+  if (((firstChar != secondChar) && (firstNum != secondNum))) {
+    return "d";
+  } else if (firstChar == secondChar) {
     return "v";
   } else {
     return "h";
@@ -164,9 +168,79 @@ function moveShip(horizOrVerti, movedShip, movedShipDelete) {
       }
     });
   }
-  renderColour(movedShip);
   renderColourDelete(movedShipDelete);
   followAllShips();
+  renderColour(movedShip);
+}
+
+function shipIntersection(horizOrVerti, bShip) {
+  console.log("check inter");
+  if (horizOrVerti == "v") {
+    if (Number(newPosition.charAt(1)) < Number(newDirection.charAt(1))) {
+      console.log("from above");
+      for (let t = Number(newPosition.charAt(1)); t < (Number(newPosition.charAt(1)) + bShip.location.length); t++) {
+        let tempXCoord = newPosition.charAt(0);
+        let tempYCoord = t;
+        let tempCoord = tempXCoord + tempYCoord.toString();
+        let tempColor = document.getElementById(tempCoord).style.backgroundColor;
+        console.log(tempCoord, tempColor);
+        if (tempColor == "gray") {
+          console.log("Intersection, above, new ship");
+          placingShips = 0;
+          return false;
+        }
+      }
+      return true;
+    } else {
+      console.log("from below");
+      for (let t = Number(newPosition.charAt(1)); t > (Number(newPosition.charAt(1)) - bShip.location.length); t--) {
+        console.log(t);
+        let tempXCoord = newPosition.charAt(0);
+        let tempYCoord = t;
+        let tempCoord = tempXCoord + tempYCoord.toString();
+        let tempColor = document.getElementById(tempCoord).style.backgroundColor;
+        console.log(tempCoord, tempColor);
+        if (tempColor == "gray") {
+          console.log("Intersection, below, new ship");
+          placingShips = 0;
+          return false;
+        }
+      }
+      return true;
+    }
+  } else {
+    if (newPosition.charAt(0).charCodeAt(0) < newDirection.charAt(0).charCodeAt(0)) {
+      console.log(99, newPosition.charAt(0).charCodeAt(0));
+      for (let t = newPosition.charAt(0).charCodeAt(0); t < (newPosition.charAt(0).charCodeAt(0) + bShip.location.length); t++) {
+        console.log("t ", t);
+        let tempXCoord = t;
+        let tempYCoord = newPosition.charAt(1);
+        let tempCoord = String.fromCharCode(tempXCoord) + tempYCoord;
+        let tempColor = document.getElementById(tempCoord).style.backgroundColor;
+        if (tempColor == "gray") {
+          console.log("Intersection, left, new ship");
+          placingShips = 0;
+          return false;
+        }
+      }
+      return true;
+    } else {
+      for (let t = newPosition.charAt(0).charCodeAt(0); t > (newPosition.charAt(0).charCodeAt(0) - bShip.location.length); t--) {
+        console.log("t ", t);
+        let tempXCoord = t;
+        let tempYCoord = newPosition.charAt(1);
+        let tempCoord = String.fromCharCode(tempXCoord) + tempYCoord;
+        let tempColor = document.getElementById(tempCoord).style.backgroundColor;
+        if (tempColor == "gray") {
+          console.log("Intersection, left, new ship");
+          placingShips = 0;
+          return false;
+        }
+      }
+      return true;
+    }
+    return true;
+  }
 }
 
 function shipHitOrMiss(bShip) {
@@ -283,27 +357,49 @@ document.querySelectorAll(".board-grid").forEach(function (currentValue) {
           placingShips = 3;
         }
       }
+      // Continue placing new ship position
       if (placingShips == 3) {
         let horizOrVerti = horizontalOrVertical(newPosition, newDirection);
+        if (horizOrVerti == "d") {
+          console.log("diag, new ship");
+          placingShips = 0;
+          return;
+        }
+        console.log(horizOrVerti);
         if (currentShip == "shipA5") {
           if (offGrid(horizOrVerti, shipA5)) {
-            moveShip(horizOrVerti, shipA5, shipA5Delete);
+            if (shipIntersection(horizOrVerti, shipA5)) {
+              console.log("all clear");
+              moveShip(horizOrVerti, shipA5, shipA5Delete);
+            }
           }
         } else if (currentShip == "shipB4") {
           if (offGrid(horizOrVerti, shipB4)) {
-            moveShip(horizOrVerti, shipB4, shipB4Delete);
+            if (shipIntersection(horizOrVerti, shipB4)) {
+              console.log("all clear");
+              moveShip(horizOrVerti, shipB4, shipB4Delete);
+            }
           }
         } else if (currentShip == "shipC3") {
           if (offGrid(horizOrVerti, shipC3)) {
-            moveShip(horizOrVerti, shipC3, shipC3Delete);
+            if (shipIntersection(horizOrVerti, shipC3)) {
+              console.log("all clear");
+              moveShip(horizOrVerti, shipC3, shipC3Delete);
+            }
           }
         } else if (currentShip == "shipD3") {
           if (offGrid(horizOrVerti, shipD3)) {
-            moveShip(horizOrVerti, shipD3, shipD3Delete);
+            if (shipIntersection(horizOrVerti, shipD3)) {
+              console.log("all clear");
+              moveShip(horizOrVerti, shipD3, shipD3Delete);
+            }
           }
         } else if (currentShip == "shipE2") {
           if (offGrid(horizOrVerti, shipE2)) {
-            moveShip(horizOrVerti, shipE2, shipE2Delete);
+            if (shipIntersection(horizOrVerti, shipE2)) {
+              console.log("all clear");
+              moveShip(horizOrVerti, shipE2, shipE2Delete);
+            }
           }
         }
         placingShips = 0;
@@ -343,6 +439,7 @@ document.querySelectorAll(".board-grid").forEach(function (currentValue) {
     }
   });
 });
+// Changes game status, if button required
 document
   .getElementById("btn")
   .addEventListener("click", function (currentValue) {

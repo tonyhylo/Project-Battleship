@@ -3,8 +3,15 @@
 2   Repeat click after selecting ship
         Fixed, error trapped at newDirection == newPosition at second click
 3   Overlapping moving same ship vertically to horizontally (like a cross)
+        Fixed, render white cell first, then render grey ship
 4   Possibly intersecting another ship
+        Fixed, new function shipIntersection
 5   Overlapping perpendicular
+        Fixed, render white cell first, then render grey ship
 6   shipE2 doesn't work
         Fixed, declared wrong initial shipE2Delete length
 7   Moving ship in line
+        Fixed, render white cell first, then render grey ship
+8   Diagonal directions
+        Fixed, added exit lines in horizontalOrVertical()
+9   Perpendicular from same boat, not allowed

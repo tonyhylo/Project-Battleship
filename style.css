@@ -16,6 +16,10 @@ tr {
     border: 1px solid black;
 }
 
+td {
+    background-color: white;
+}
+
 th, td {
     border-right: 1px solid black;
 }
