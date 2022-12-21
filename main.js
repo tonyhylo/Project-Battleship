@@ -45,11 +45,20 @@ const colourLegend = {
   null: "white",
   1: "gray",
   "-1": "red",
+  2: "blue",
 };
 class Battleship {
   constructor(length) {
     this.length = length;
     this.ship = Array(length).fill(1);
+    this.location = Array(length).fill("null");
+  }
+}
+
+class Battleship_PC {
+  constructor(length) {
+    this.length = length;
+    this.ship = Array(length).fill(2);
     this.location = Array(length).fill("null");
   }
 }
@@ -174,10 +183,8 @@ function moveShip(horizOrVerti, movedShip, movedShipDelete) {
 }
 
 function shipIntersection(horizOrVerti, bShip) {
-  console.log("check inter");
   if (horizOrVerti == "v") {
     if (Number(newPosition.charAt(1)) < Number(newDirection.charAt(1))) {
-      console.log("from above");
       for (
         let t = Number(newPosition.charAt(1));
         t < Number(newPosition.charAt(1)) + bShip.location.length;
@@ -188,30 +195,24 @@ function shipIntersection(horizOrVerti, bShip) {
         let tempCoord = tempXCoord + tempYCoord.toString();
         let tempColor =
           document.getElementById(tempCoord).style.backgroundColor;
-        console.log(tempCoord, tempColor);
         if (tempColor == "gray") {
-          console.log("Intersection, above, new ship");
           placingShips = 0;
           return false;
         }
       }
       return true;
     } else {
-      console.log("from below");
       for (
         let t = Number(newPosition.charAt(1));
         t > Number(newPosition.charAt(1)) - bShip.location.length;
         t--
       ) {
-        console.log(t);
         let tempXCoord = newPosition.charAt(0);
         let tempYCoord = t;
         let tempCoord = tempXCoord + tempYCoord.toString();
         let tempColor =
           document.getElementById(tempCoord).style.backgroundColor;
-        console.log(tempCoord, tempColor);
         if (tempColor == "gray") {
-          console.log("Intersection, below, new ship");
           placingShips = 0;
           return false;
         }
@@ -222,20 +223,17 @@ function shipIntersection(horizOrVerti, bShip) {
     if (
       newPosition.charAt(0).charCodeAt(0) < newDirection.charAt(0).charCodeAt(0)
     ) {
-      console.log(99, newPosition.charAt(0).charCodeAt(0));
       for (
         let t = newPosition.charAt(0).charCodeAt(0);
         t < newPosition.charAt(0).charCodeAt(0) + bShip.location.length;
         t++
       ) {
-        console.log("t ", t);
         let tempXCoord = t;
         let tempYCoord = newPosition.charAt(1);
         let tempCoord = String.fromCharCode(tempXCoord) + tempYCoord;
         let tempColor =
           document.getElementById(tempCoord).style.backgroundColor;
         if (tempColor == "gray") {
-          console.log("Intersection, left, new ship");
           placingShips = 0;
           return false;
         }
@@ -247,14 +245,12 @@ function shipIntersection(horizOrVerti, bShip) {
         t > newPosition.charAt(0).charCodeAt(0) - bShip.location.length;
         t--
       ) {
-        console.log("t ", t);
         let tempXCoord = t;
         let tempYCoord = newPosition.charAt(1);
         let tempCoord = String.fromCharCode(tempXCoord) + tempYCoord;
         let tempColor =
           document.getElementById(tempCoord).style.backgroundColor;
         if (tempColor == "gray") {
-          console.log("Intersection, left, new ship");
           placingShips = 0;
           return false;
         }
@@ -278,13 +274,11 @@ function offGrid(horizOrVerti, bShip) {
   if (horizOrVerti == "v") {
     if (Number(newPosition.charAt(1)) < Number(newDirection.charAt(1))) {
       if (Number(newPosition.charAt(1)) + bShip.length > 10) {
-        console.log("over, pick ship");
         placingShips = 0;
         return false;
       }
     } else {
       if (Number(newPosition.charAt(1)) - bShip.length < -1) {
-        console.log("under, pick ship");
         placingShips = 0;
         return false;
       }
@@ -294,13 +288,11 @@ function offGrid(horizOrVerti, bShip) {
       newPosition.charAt(0).charCodeAt(0) < newDirection.charAt(0).charCodeAt(0)
     ) {
       if (newPosition.charAt(0).charCodeAt(0) + bShip.length > 75) {
-        console.log("over, pick ship");
         placingShips = 0;
         return false;
       }
     } else {
       if (newPosition.charAt(0).charCodeAt(0) - bShip.length < 64) {
-        console.log("under, pick ship");
         placingShips = 0;
         return false;
       }
@@ -310,81 +302,206 @@ function offGrid(horizOrVerti, bShip) {
 }
 
 function generatePcBattleship(bShip_Pc) {
-  console.log("begin for ship");
-  let newPosition_PC_x = String.fromCharCode(Math.floor(Math.random() * 10) + 65);
+  console.log("begin for ship", bShip_Pc);
+  let newPosition_PC_x = String.fromCharCode(
+    Math.floor(Math.random() * 10) + 65
+  );
   let newPosition_PC_y = Math.floor(Math.random() * 10);
   let newPosition_PC = newPosition_PC_x + newPosition_PC_y;
   let newDirection_PC, newDirection_PC_x, newDirection_PC_y;
-  horOrVer_PC = (Math.floor(Math.random() * 10)) % 2;
-  let beforeAfter_PC = (Math.floor(Math.random() * 10)) % 2;
+  horOrVer_PC = Math.floor(Math.random() * 10) % 2;
+  let beforeAfter_PC = Math.floor(Math.random() * 10) % 2;
   if (beforeAfter_PC == 0) {
     beforeAfter_PC = -1;
   }
   if (horOrVer_PC) {
     horOrVer_PC = "h";
     newDirection_PC_y = newPosition_PC_y;
-    newDirection_PC_x = newPosition_PC_x.charAt(0).charCodeAt(0) + beforeAfter_PC;
-    newDirection_PC = String.fromCharCode(newDirection_PC_x) + newDirection_PC_y;
-    console.log("h", newPosition_PC, newDirection_PC);
+    newDirection_PC_x =
+      newPosition_PC_x.charAt(0).charCodeAt(0) + beforeAfter_PC;
+    newDirection_PC =
+      String.fromCharCode(newDirection_PC_x) + newDirection_PC_y;
   } else {
     horOrVer_PC = "v";
     newDirection_PC_y = newPosition_PC_y + beforeAfter_PC;
     newDirection_PC_x = newPosition_PC_x;
     newDirection_PC = newDirection_PC_x + newDirection_PC_y;
-    console.log("v", newPosition_PC, newDirection_PC);
   }
   bShip_Pc.location.forEach(function (pcLoc, pcIndex) {
     if (horOrVer_PC == "v") {
       if (beforeAfter_PC == 1) {
-        console.log("after ", newPosition_PC, pcIndex);
         bShip_Pc.location[pcIndex] = newPosition_PC;
         newPosition_PC_y = newPosition_PC_y + 1;
         newPosition_PC = newPosition_PC_x + newPosition_PC_y;
       } else {
-        console.log("before ", newPosition_PC, pcIndex);
         bShip_Pc.location[pcIndex] = newPosition_PC;
         newPosition_PC_y = newPosition_PC_y - 1;
         newPosition_PC = newPosition_PC_x + newPosition_PC_y;
       }
     } else {
       if (beforeAfter_PC == 1) {
-        console.log("after ", newPosition_PC, pcIndex);
         bShip_Pc.location[pcIndex] = newPosition_PC;
-        newPosition_PC_x = String.fromCharCode(newPosition_PC_x.charAt(0).charCodeAt(0) + 1);
+        newPosition_PC_x = String.fromCharCode(
+          newPosition_PC_x.charAt(0).charCodeAt(0) + 1
+        );
         newPosition_PC = newPosition_PC_x + newPosition_PC_y;
       } else {
-        console.log("before ", newPosition_PC, pcIndex);
         bShip_Pc.location[pcIndex] = newPosition_PC;
-        newPosition_PC_x = String.fromCharCode(newPosition_PC_x.charAt(0).charCodeAt(0) - 1);
+        newPosition_PC_x = String.fromCharCode(
+          newPosition_PC_x.charAt(0).charCodeAt(0) - 1
+        );
         newPosition_PC = newPosition_PC_x + newPosition_PC_y;
       }
     }
   });
-  console.log("end for ship");
+  console.log("end for ship", bShip_Pc);
 }
 
 function offGrid_Pc(hOrV, bShip_Pc) {
   if (hOrV == "v") {
-    if ((bShip_Pc.location[0].slice(1) >= 0 && bShip_Pc.location[0].slice(1) <= 9) && (bShip_Pc.location[bShip_Pc.location.length - 1].slice(1) >= 0 && bShip_Pc.location[bShip_Pc.location.length - 1].slice(1) <= 9)) {
-      console.log("inside9", bShip_Pc.location[0].slice(1)," and ", bShip_Pc.location[bShip_Pc.location.length - 1].slice(1), true);
-      return true;
-    } else {
-      console.log("outside", false);
+    console.log("v");
+    if (
+      Number(bShip_Pc.location[0].slice(1)) >= 0 &&
+      Number(bShip_Pc.location[0].slice(1)) <= 9 &&
+      Number(bShip_Pc.location[bShip_Pc.location.length - 1].slice(1)) >= 0 &&
+      Number(bShip_Pc.location[bShip_Pc.location.length - 1].slice(1)) <= 9
+    ) {
       return false;
+    } else {
+      return true;
     }
   } else {
-    if ((bShip_Pc.location[0].charAt(0).charCodeAt(0) >= 65 && bShip_Pc.location[0].charAt(0).charCodeAt(0) <= 74) && (bShip_Pc.location[bShip_Pc.location.length - 1].charAt(0).charCodeAt(0) >= 65 && bShip_Pc.location[bShip_Pc.location.length - 1].charAt(0).charCodeAt(0) <= 74)) {
-      console.log("inside10");
-      return true;
-    } else {
-      console.log("outside", false);
+    console.log("h");
+    if (
+      Number(bShip_Pc.location[0].charAt(0).charCodeAt(0)) >= 65 &&
+      Number(bShip_Pc.location[0].charAt(0).charCodeAt(0)) <= 74 &&
+      Number(
+        bShip_Pc.location[bShip_Pc.location.length - 1].charAt(0).charCodeAt(0)
+      ) >= 65 &&
+      Number(
+        bShip_Pc.location[bShip_Pc.location.length - 1].charAt(0).charCodeAt(0)
+      ) <= 74
+    ) {
       return false;
+    } else {
+      return true;
     }
   }
 }
 
+function intersectionE_PC() {
+  let flag = false;
+  shipE2_PC.location.forEach(function (currentValue) {
+    shipA5_PC.location.forEach(function (currVal) {
+      if (currentValue == currVal) {
+        console.log("E,A true");
+        flag = true;
+        return true;
+      }
+    });
+    shipB4_PC.location.forEach(function (currVal) {
+      if (currentValue == currVal) {
+        console.log("E,B true");
+        flag = true;
+        return true;
+      }
+    });
+    shipC3_PC.location.forEach(function (currVal) {
+      if (currentValue == currVal) {
+        console.log("E,C true");
+        flag = true;
+        return true;
+      }
+    });
+    shipD3_PC.location.forEach(function (currVal) {
+      if (currentValue == currVal) {
+        console.log("E,D true");
+        flag = true;
+        return true;
+      }
+    });
+  });
+  if (flag) {
+    return true;
+  }
+  console.log("E, false");
+  return false;
+}
 
+function intersectionD_PC() {
+  let flag = false;
+  shipD3_PC.location.forEach(function (currentValue) {
+    shipA5_PC.location.forEach(function (currVal) {
+      if (currentValue == currVal) {
+        console.log("D,A true");
+        flag = true;
+        return true;
+      }
+    });
+    shipB4_PC.location.forEach(function (currVal) {
+      if (currentValue == currVal) {
+        console.log("D,B true");
+        flag = true;
+        return true;
+      }
+    });
+    shipC3_PC.location.forEach(function (currVal) {
+      if (currentValue == currVal) {
+        console.log("D,C true");
+        flag = true;
+        return true;
+      }
+    });
+  });
+  if (flag) {
+    return true;
+  }
+  console.log("D, false");
+  return false;
+}
 
+function intersectionC_PC() {
+  let flag = false;
+  shipC3_PC.location.forEach(function (currentValue) {
+    shipA5_PC.location.forEach(function (currVal) {
+      if (currentValue == currVal) {
+        console.log("C,A true");
+        flag = true;
+        return true;
+      }
+    });
+    shipB4_PC.location.forEach(function (currVal) {
+      if (currentValue == currVal) {
+        console.log("C,B true");
+        flag = true;
+        return true;
+      }
+    });
+  });
+  if (flag) {
+    return true;
+  }
+  console.log("C, false");
+  return false;
+}
+
+function intersectionB_PC(bShip_Pc) {
+  let flag = false;
+  bShip_Pc.location.forEach(function (currentValue) {
+    shipA5_PC.location.forEach(function (currVal) {
+      if (currentValue == currVal) {
+        console.log("B,A true");
+        flag = true;
+        return true;
+      }
+    });
+  });
+  if (flag) {
+    return true;
+  }
+  console.log("B, false");
+  return false;
+}
 
 //Initialize first run
 let shipA5 = new Battleship(5);
@@ -397,16 +514,11 @@ let shipB4Delete = new BattleshipDelete(4);
 let shipC3Delete = new BattleshipDelete(3);
 let shipD3Delete = new BattleshipDelete(3);
 let shipE2Delete = new BattleshipDelete(2);
-let shipA5_PC = new Battleship(5);
-let shipB4_PC = new Battleship(4);
-let shipC3_PC = new Battleship(3);
-let shipD3_PC = new Battleship(3);
-let shipE2_PC = new Battleship(2);
-let shipA5Delete_PC = new BattleshipDelete(5);
-let shipB4Delete_PC = new BattleshipDelete(4);
-let shipC3Delete_PC = new BattleshipDelete(3);
-let shipD3Delete_PC = new BattleshipDelete(3);
-let shipE2Delete_PC = new BattleshipDelete(2);
+let shipA5_PC = new Battleship_PC(5);
+let shipB4_PC = new Battleship_PC(4);
+let shipC3_PC = new Battleship_PC(3);
+let shipD3_PC = new Battleship_PC(3);
+let shipE2_PC = new Battleship_PC(2);
 let gameStatus = 0; // 0 = new game (place ships), 1 = player turn, -1 = pc turn, 2 = game over start new game
 iniShipLocation();
 followAllShips();
@@ -414,25 +526,58 @@ renderColourAll();
 // create pc battleships
 let horOrVer_PC;
 generatePcBattleship(shipA5_PC);
-while (!offGrid_Pc(horOrVer_PC, shipA5_PC)) {
+while (offGrid_Pc(horOrVer_PC, shipA5_PC)) {
   generatePcBattleship(shipA5_PC);
 }
+console.log(shipA5_PC.location);
 generatePcBattleship(shipB4_PC);
-while (!offGrid_Pc(horOrVer_PC, shipB4_PC)) {
+while (offGrid_Pc(horOrVer_PC, shipB4_PC) || intersectionB_PC(shipB4_PC)) {
+  console.log("start gen");
   generatePcBattleship(shipB4_PC);
+  console.log("end gen");
 }
+console.log(shipB4_PC.location);
 generatePcBattleship(shipC3_PC);
-while (!offGrid_Pc(horOrVer_PC, shipC3_PC)) {
+while ((offGrid_Pc(horOrVer_PC, shipC3_PC) || intersectionC_PC())) {
   generatePcBattleship(shipC3_PC);
 }
+console.log(shipC3_PC.location);
 generatePcBattleship(shipD3_PC);
-while (!offGrid_Pc(horOrVer_PC, shipD3_PC)) {
+while ((offGrid_Pc(horOrVer_PC, shipD3_PC) || intersectionD_PC())) {
   generatePcBattleship(shipD3_PC);
 }
+console.log(shipD3_PC.location);
 generatePcBattleship(shipE2_PC);
-while (!offGrid_Pc(horOrVer_PC, shipE2_PC)) {
+while ((offGrid_Pc(horOrVer_PC, shipE2_PC) || intersectionE_PC())) {
   generatePcBattleship(shipE2_PC);
 }
+console.log(shipE2_PC.location);
+
+
+
+shipA5_PC.location.forEach(function (currentValue, idx) {
+  document.getElementById(currentValue).style.backgroundColor =
+    colourLegend[shipA5_PC.ship[idx]];
+});  
+shipB4_PC.location.forEach(function (currentValue, idx) {
+  document.getElementById(currentValue).style.backgroundColor =
+    colourLegend[shipB4_PC.ship[idx]];
+});  
+shipC3_PC.location.forEach(function (currentValue, idx) {
+  document.getElementById(currentValue).style.backgroundColor =
+    colourLegend[shipC3_PC.ship[idx]];
+});  
+shipD3_PC.location.forEach(function (currentValue, idx) {
+  document.getElementById(currentValue).style.backgroundColor =
+    colourLegend[shipD3_PC.ship[idx]];
+});  
+shipE2_PC.location.forEach(function (currentValue, idx) {
+  document.getElementById(currentValue).style.backgroundColor =
+    colourLegend[shipE2_PC.ship[idx]];
+});
+
+
+
 
 //Get where user clicked on grid
 let currentClick, currentShip, newPosition, newDirection;
@@ -496,39 +641,33 @@ document.querySelectorAll(".board-grid").forEach(function (currentValue) {
           placingShips = 0;
           return;
         }
-        console.log(horizOrVerti);
         if (currentShip == "shipA5") {
           if (offGrid(horizOrVerti, shipA5)) {
             if (shipIntersection(horizOrVerti, shipA5)) {
-              console.log("all clear");
               moveShip(horizOrVerti, shipA5, shipA5Delete);
             }
           }
         } else if (currentShip == "shipB4") {
           if (offGrid(horizOrVerti, shipB4)) {
             if (shipIntersection(horizOrVerti, shipB4)) {
-              console.log("all clear");
               moveShip(horizOrVerti, shipB4, shipB4Delete);
             }
           }
         } else if (currentShip == "shipC3") {
           if (offGrid(horizOrVerti, shipC3)) {
             if (shipIntersection(horizOrVerti, shipC3)) {
-              console.log("all clear");
               moveShip(horizOrVerti, shipC3, shipC3Delete);
             }
           }
         } else if (currentShip == "shipD3") {
           if (offGrid(horizOrVerti, shipD3)) {
             if (shipIntersection(horizOrVerti, shipD3)) {
-              console.log("all clear");
               moveShip(horizOrVerti, shipD3, shipD3Delete);
             }
           }
         } else if (currentShip == "shipE2") {
           if (offGrid(horizOrVerti, shipE2)) {
             if (shipIntersection(horizOrVerti, shipE2)) {
-              console.log("all clear");
               moveShip(horizOrVerti, shipE2, shipE2Delete);
             }
           }
