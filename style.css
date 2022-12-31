@@ -6,6 +6,7 @@
     border-collapse: collapse;
     margin-left: auto;
     margin-right: auto;
+    text-align: center;
 }
 
 h1 {
@@ -50,7 +51,7 @@ th, td {
     background-color: rgba(0, 0, 255, 1);
 }
 
-#msg {
+#msg, #error-msg, #result-msg {
     text-align: center;
 }
 

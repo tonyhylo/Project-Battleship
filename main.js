@@ -58,7 +58,7 @@ class Battleship {
 class Battleship_PC {
   constructor(length) {
     this.length = length;
-    this.ship = Array(length).fill(2);
+    this.ship = Array(length).fill(3);
     this.location = Array(length).fill("null");
   }
 }
@@ -197,6 +197,9 @@ function shipIntersection(horizOrVerti, bShip) {
           document.getElementById(tempCoord).style.backgroundColor;
         if (tempColor == "gray") {
           placingShips = 0;
+          document.getElementById("error-msg").innerHTML =
+            "Cannot intersect battleships.  Please reselect new battleship to move.";
+          document.getElementById("msg").innerHTML = "";
           return false;
         }
       }
@@ -214,6 +217,9 @@ function shipIntersection(horizOrVerti, bShip) {
           document.getElementById(tempCoord).style.backgroundColor;
         if (tempColor == "gray") {
           placingShips = 0;
+          document.getElementById("error-msg").innerHTML =
+            "Cannot intersect battleships.  Please reselect new battleship to move.";
+          document.getElementById("msg").innerHTML = "";
           return false;
         }
       }
@@ -235,6 +241,9 @@ function shipIntersection(horizOrVerti, bShip) {
           document.getElementById(tempCoord).style.backgroundColor;
         if (tempColor == "gray") {
           placingShips = 0;
+          document.getElementById("error-msg").innerHTML =
+            "Cannot intersect battleships.  Please reselect new battleship to move.";
+          document.getElementById("msg").innerHTML = "";
           return false;
         }
       }
@@ -252,6 +261,9 @@ function shipIntersection(horizOrVerti, bShip) {
           document.getElementById(tempCoord).style.backgroundColor;
         if (tempColor == "gray") {
           placingShips = 0;
+          document.getElementById("error-msg").innerHTML =
+            "Cannot intersect battleships.  Please reselect new battleship to move.";
+          document.getElementById("msg").innerHTML = "";
           return false;
         }
       }
@@ -262,12 +274,31 @@ function shipIntersection(horizOrVerti, bShip) {
 }
 
 function shipHitOrMiss(bShip) {
-  bShip.location.forEach(function (hitOrMissLocation, hitOrMissLocationIndex) {
-    if (currentClick == hitOrMissLocation) {
-      bShip.ship[hitOrMissLocationIndex] = -1;
-      renderColour(bShip);
+  document.getElementById("error-msg").innerHTML = "";
+  for (let o = 0; o < bShip.length; o++) {
+    if (gameStatus == 1) {
+      if (currentClick == bShip.location[o]) {
+        bShip.ship[o] = -1;
+        renderColour(bShip);
+        document.getElementById(
+          "result-msg"
+        ).innerHTML = `Hit, ${currentClick}! Click grid for PC turn.`;
+        return true;
+      }
+    } else {
+      if (pcGuess == bShip.location[o]) {
+        bShip.ship[o] = -2;
+        document.getElementById(
+          "result-msg"
+        ).innerHTML = `Hit, ${pcGuess}! Your turn!`;
+        document.getElementById(pcGuess).innerHTML = "X";
+        document.getElementById(pcGuess).style.boxShadow =
+          "0 0 0 5px purple inset";
+        return true;
+      }
     }
-  });
+  }
+  return false;
 }
 
 function offGrid(horizOrVerti, bShip) {
@@ -275,11 +306,17 @@ function offGrid(horizOrVerti, bShip) {
     if (Number(newPosition.charAt(1)) < Number(newDirection.charAt(1))) {
       if (Number(newPosition.charAt(1)) + bShip.length > 10) {
         placingShips = 0;
+        document.getElementById("error-msg").innerHTML =
+          "Cannot place battleships off grid.  Please reselect new battleship to move.";
+        document.getElementById("msg").innerHTML = "";
         return false;
       }
     } else {
       if (Number(newPosition.charAt(1)) - bShip.length < -1) {
         placingShips = 0;
+        document.getElementById("error-msg").innerHTML =
+          "Cannot place battleships off grid.  Please reselect new battleship to move.";
+        document.getElementById("msg").innerHTML = "";
         return false;
       }
     }
@@ -289,11 +326,18 @@ function offGrid(horizOrVerti, bShip) {
     ) {
       if (newPosition.charAt(0).charCodeAt(0) + bShip.length > 75) {
         placingShips = 0;
+        document.getElementById("error-msg").innerHTML =
+          "Cannot place battleships off grid.  Please reselect new battleship to move.";
+        document.getElementById("msg").innerHTML = "";
         return false;
       }
     } else {
       if (newPosition.charAt(0).charCodeAt(0) - bShip.length < 64) {
         placingShips = 0;
+        document.getElementById("error-msg").innerHTML =
+          "Cannot place battleships off grid.  Please reselect new battleship to move.";
+        document.getElementById("msg").innerHTML = "";
+        document.getElementById(pcGuess).innerHTML = "X";
         return false;
       }
     }
@@ -302,7 +346,6 @@ function offGrid(horizOrVerti, bShip) {
 }
 
 function generatePcBattleship(bShip_Pc) {
-  console.log("begin for ship", bShip_Pc);
   let newPosition_PC_x = String.fromCharCode(
     Math.floor(Math.random() * 10) + 65
   );
@@ -354,12 +397,10 @@ function generatePcBattleship(bShip_Pc) {
       }
     }
   });
-  console.log("end for ship", bShip_Pc);
 }
 
 function offGrid_Pc(hOrV, bShip_Pc) {
   if (hOrV == "v") {
-    console.log("v");
     if (
       Number(bShip_Pc.location[0].slice(1)) >= 0 &&
       Number(bShip_Pc.location[0].slice(1)) <= 9 &&
@@ -371,7 +412,6 @@ function offGrid_Pc(hOrV, bShip_Pc) {
       return true;
     }
   } else {
-    console.log("h");
     if (
       Number(bShip_Pc.location[0].charAt(0).charCodeAt(0)) >= 65 &&
       Number(bShip_Pc.location[0].charAt(0).charCodeAt(0)) <= 74 &&
@@ -394,28 +434,24 @@ function intersectionE_PC() {
   shipE2_PC.location.forEach(function (currentValue) {
     shipA5_PC.location.forEach(function (currVal) {
       if (currentValue == currVal) {
-        console.log("E,A true");
         flag = true;
         return true;
       }
     });
     shipB4_PC.location.forEach(function (currVal) {
       if (currentValue == currVal) {
-        console.log("E,B true");
         flag = true;
         return true;
       }
     });
     shipC3_PC.location.forEach(function (currVal) {
       if (currentValue == currVal) {
-        console.log("E,C true");
         flag = true;
         return true;
       }
     });
     shipD3_PC.location.forEach(function (currVal) {
       if (currentValue == currVal) {
-        console.log("E,D true");
         flag = true;
         return true;
       }
@@ -424,7 +460,6 @@ function intersectionE_PC() {
   if (flag) {
     return true;
   }
-  console.log("E, false");
   return false;
 }
 
@@ -433,21 +468,18 @@ function intersectionD_PC() {
   shipD3_PC.location.forEach(function (currentValue) {
     shipA5_PC.location.forEach(function (currVal) {
       if (currentValue == currVal) {
-        console.log("D,A true");
         flag = true;
         return true;
       }
     });
     shipB4_PC.location.forEach(function (currVal) {
       if (currentValue == currVal) {
-        console.log("D,B true");
         flag = true;
         return true;
       }
     });
     shipC3_PC.location.forEach(function (currVal) {
       if (currentValue == currVal) {
-        console.log("D,C true");
         flag = true;
         return true;
       }
@@ -456,7 +488,6 @@ function intersectionD_PC() {
   if (flag) {
     return true;
   }
-  console.log("D, false");
   return false;
 }
 
@@ -465,14 +496,12 @@ function intersectionC_PC() {
   shipC3_PC.location.forEach(function (currentValue) {
     shipA5_PC.location.forEach(function (currVal) {
       if (currentValue == currVal) {
-        console.log("C,A true");
         flag = true;
         return true;
       }
     });
     shipB4_PC.location.forEach(function (currVal) {
       if (currentValue == currVal) {
-        console.log("C,B true");
         flag = true;
         return true;
       }
@@ -481,7 +510,6 @@ function intersectionC_PC() {
   if (flag) {
     return true;
   }
-  console.log("C, false");
   return false;
 }
 
@@ -490,7 +518,6 @@ function intersectionB_PC(bShip_Pc) {
   bShip_Pc.location.forEach(function (currentValue) {
     shipA5_PC.location.forEach(function (currVal) {
       if (currentValue == currVal) {
-        console.log("B,A true");
         flag = true;
         return true;
       }
@@ -499,8 +526,96 @@ function intersectionB_PC(bShip_Pc) {
   if (flag) {
     return true;
   }
-  console.log("B, false");
   return false;
+}
+
+function colourPcShips() {
+  shipA5_PC.location.forEach(function (currentValue, idx) {
+    document.getElementById(currentValue).style.backgroundColor =
+      colourLegend[shipA5_PC.ship[idx]];
+  });
+  shipB4_PC.location.forEach(function (currentValue, idx) {
+    document.getElementById(currentValue).style.backgroundColor =
+      colourLegend[shipB4_PC.ship[idx]];
+  });
+  shipC3_PC.location.forEach(function (currentValue, idx) {
+    document.getElementById(currentValue).style.backgroundColor =
+      colourLegend[shipC3_PC.ship[idx]];
+  });
+  shipD3_PC.location.forEach(function (currentValue, idx) {
+    document.getElementById(currentValue).style.backgroundColor =
+      colourLegend[shipD3_PC.ship[idx]];
+  });
+  shipE2_PC.location.forEach(function (currentValue, idx) {
+    document.getElementById(currentValue).style.backgroundColor =
+      colourLegend[shipE2_PC.ship[idx]];
+  });
+}
+
+function checkGameOver(gameStatus) {
+  let gameOverFlag = false;
+  if (gameStatus == -1) {
+    let shipA5Result = shipA5.ship.reduce(function (accumulator, cV) {
+      return accumulator + cV;
+    });
+    let shipB4Result = shipB4.ship.reduce(function (accumulator, cV) {
+      return accumulator + cV;
+    });
+    let shipC3Result = shipC3.ship.reduce(function (accumulator, cV) {
+      return accumulator + cV;
+    });
+    let shipD3Result = shipD3.ship.reduce(function (accumulator, cV) {
+      return accumulator + cV;
+    });
+    let shipE2Result = shipE2.ship.reduce(function (accumulator, cV) {
+      return accumulator + cV;
+    });
+    let gameOver =
+      shipA5Result + shipB4Result + shipC3Result + shipD3Result + shipE2Result;
+    if (gameOver == -34) {
+      document.getElementById("error-msg").innerHTML = "";
+      document.getElementById("msg").innerHTML = `Game over! PC wins!`;
+      console.log("game over");
+      gameOverFlag = true;
+    }
+    console.log(`game over pc ${gameOver}`);
+  } else {
+    let shipA5Result_Pc = shipA5_PC.ship.reduce(function (accumulator, cV) {
+      return accumulator + cV;
+    });
+    let shipB4Result_Pc = shipB4_PC.ship.reduce(function (accumulator, cV) {
+      return accumulator + cV;
+    });
+    let shipC3Result_Pc = shipC3_PC.ship.reduce(function (accumulator, cV) {
+      return accumulator + cV;
+    });
+    let shipD3Result_Pc = shipD3_PC.ship.reduce(function (accumulator, cV) {
+      return accumulator + cV;
+    });
+    let shipE2Result_Pc = shipE2_PC.ship.reduce(function (accumulator, cV) {
+      return accumulator + cV;
+    });
+    let gameOver_Pc =
+      shipA5Result_Pc +
+      shipB4Result_Pc +
+      shipC3Result_Pc +
+      shipD3Result_Pc +
+      shipE2Result_Pc;
+    if (gameOver_Pc == -17) {
+      document.getElementById("error-msg").innerHTML = "";
+      document.getElementById("msg").innerHTML = `Game over! You win!`;
+      console.log("game over");
+      gameOverFlag = true;
+    }
+    console.log(`game over user ${gameOver_Pc}`);
+  }
+  if (gameOverFlag) {
+    document.querySelectorAll(".board-grid").forEach(function (currentValue) {
+      currentValue.removeEventListener();
+      console.log(currentValue.getAttribute("class"));
+    })
+    console.log("no more clicky");
+  }
 }
 
 //Initialize first run
@@ -529,65 +644,70 @@ generatePcBattleship(shipA5_PC);
 while (offGrid_Pc(horOrVer_PC, shipA5_PC)) {
   generatePcBattleship(shipA5_PC);
 }
-console.log(shipA5_PC.location);
 generatePcBattleship(shipB4_PC);
 while (offGrid_Pc(horOrVer_PC, shipB4_PC) || intersectionB_PC(shipB4_PC)) {
-  console.log("start gen");
   generatePcBattleship(shipB4_PC);
-  console.log("end gen");
 }
-console.log(shipB4_PC.location);
 generatePcBattleship(shipC3_PC);
-while ((offGrid_Pc(horOrVer_PC, shipC3_PC) || intersectionC_PC())) {
+while (offGrid_Pc(horOrVer_PC, shipC3_PC) || intersectionC_PC()) {
   generatePcBattleship(shipC3_PC);
 }
-console.log(shipC3_PC.location);
 generatePcBattleship(shipD3_PC);
-while ((offGrid_Pc(horOrVer_PC, shipD3_PC) || intersectionD_PC())) {
+while (offGrid_Pc(horOrVer_PC, shipD3_PC) || intersectionD_PC()) {
   generatePcBattleship(shipD3_PC);
 }
-console.log(shipD3_PC.location);
 generatePcBattleship(shipE2_PC);
-while ((offGrid_Pc(horOrVer_PC, shipE2_PC) || intersectionE_PC())) {
+while (offGrid_Pc(horOrVer_PC, shipE2_PC) || intersectionE_PC()) {
   generatePcBattleship(shipE2_PC);
 }
-console.log(shipE2_PC.location);
 
-
-
-shipA5_PC.location.forEach(function (currentValue, idx) {
-  document.getElementById(currentValue).style.backgroundColor =
-    colourLegend[shipA5_PC.ship[idx]];
-});  
-shipB4_PC.location.forEach(function (currentValue, idx) {
-  document.getElementById(currentValue).style.backgroundColor =
-    colourLegend[shipB4_PC.ship[idx]];
-});  
-shipC3_PC.location.forEach(function (currentValue, idx) {
-  document.getElementById(currentValue).style.backgroundColor =
-    colourLegend[shipC3_PC.ship[idx]];
-});  
-shipD3_PC.location.forEach(function (currentValue, idx) {
-  document.getElementById(currentValue).style.backgroundColor =
-    colourLegend[shipD3_PC.ship[idx]];
-});  
-shipE2_PC.location.forEach(function (currentValue, idx) {
-  document.getElementById(currentValue).style.backgroundColor =
-    colourLegend[shipE2_PC.ship[idx]];
-});
-
-
-
-
-//Get where user clicked on grid
-let currentClick, currentShip, newPosition, newDirection;
+// Initial game directions
+document.getElementById(
+  "msg"
+).innerHTML = `1. Click new battleship to move. <br>
+2. Click new initial position of battleship. <br>
+3. Click direction relative to new initial position.  Cannot be diagonal. <br>
+4. When finished placing battleships, click 'Continue' button below.`;
+// Get where user clicked on grid
+let currentClick,
+  currentShip,
+  newPosition,
+  newDirection,
+  pcGuess,
+  userPastGuesses = [],
+  pcPastGuesses = [];
 let placingShips; // 0 = identify ship, 1 = new position, 2 = new direction, 3 = render
 document.querySelectorAll(".board-grid").forEach(function (currentValue) {
   currentValue.addEventListener("click", function () {
+    let wasGuessed = false;
     currentClick = currentValue.getAttribute("id");
+    userPastGuesses.forEach(function (currentValue) {
+      if (currentValue == currentClick && gameStatus != -1) {
+        wasGuessed = true;
+      }
+    });
+    if (wasGuessed) {
+      console.log("Guess again");
+      document.getElementById(
+        "error-msg"
+      ).innerHTML = `${currentClick} was previously guessed, guess again.`;
+      return;
+    }
     if (!gameStatus) {
-      // New game, placing ships
+      //       // New game, placing ships
+      //       // Initial game directions
+      //       document.getElementById(
+      //         "msg"
+      //       ).innerHTML = `1. Click new ship to move. <br>
+      // 2. Click new initial position of ship. <br>
+      // 3. Click direction relative to new initial position.  Cannot be diagonal.`;
       if (!placingShips) {
+        document.getElementById(
+          "msg"
+        ).innerHTML = `1. Click new battleship to move. <br>
+2. Click new initial position of battleship. <br>
+3. Click direction relative to new initial position.  Cannot be diagonal. <br>
+4. When finished placing battleships, click 'Continue' button below.`;
         // Identifies which ship to move first
         // Checks which ship
         shipA5.location.forEach(function (currVal) {
@@ -620,15 +740,22 @@ document.querySelectorAll(".board-grid").forEach(function (currentValue) {
             placingShips = 1;
           }
         });
+
+        document.getElementById("error-msg").innerHTML = "";
+        document.getElementById("msg").innerHTML = "Click new position.";
       } else if (placingShips == 1) {
         // Gets second click to determine new position
         newPosition = currentClick;
         placingShips = 2;
+        document.getElementById("msg").innerHTML = "Click new direction.";
       } else if (placingShips == 2) {
         // Gets third click to determine direction
         newDirection = currentClick;
         if (newPosition == newDirection) {
           console.log("cannot double click new direction, select new ship");
+          document.getElementById("error-msg").innerHTML =
+            "New position undefined, please select new battleship to move again.";
+          document.getElementById("msg").innerHTML = "";
         } else {
           placingShips = 3;
         }
@@ -638,6 +765,9 @@ document.querySelectorAll(".board-grid").forEach(function (currentValue) {
         let horizOrVerti = horizontalOrVertical(newPosition, newDirection);
         if (horizOrVerti == "d") {
           console.log("diag, new ship");
+          document.getElementById("error-msg").innerHTML =
+            "Cannot place diagonal ships.  Select new battleship to move.";
+          document.getElementById("msg").innerHTML = "";
           placingShips = 0;
           return;
         }
@@ -672,40 +802,109 @@ document.querySelectorAll(".board-grid").forEach(function (currentValue) {
             }
           }
         }
+        document.getElementById(
+          "msg"
+        ).innerHTML = `1. Click new battleship to move. <br>
+2. Click new initial position of battleship. <br>
+3. Click direction relative to new initial position.  Cannot be diagonal. <br>
+4. When finished placing battleships, click 'Continue' button below.`;
         placingShips = 0;
       }
     } else if (gameStatus == 1) {
+      userPastGuesses.push(currentClick);
       // Check if click got hit
-      shipHitOrMiss(shipA5);
-      shipHitOrMiss(shipB4);
-      shipHitOrMiss(shipC3);
-      shipHitOrMiss(shipD3);
-      shipHitOrMiss(shipE2);
-      // Check if game over
-      let shipA5Result = shipA5.ship.reduce(function (accumulator, cV) {
-        return accumulator + cV;
-      });
-      let shipB4Result = shipB4.ship.reduce(function (accumulator, cV) {
-        return accumulator + cV;
-      });
-      let shipC3Result = shipC3.ship.reduce(function (accumulator, cV) {
-        return accumulator + cV;
-      });
-      let shipD3Result = shipD3.ship.reduce(function (accumulator, cV) {
-        return accumulator + cV;
-      });
-      let shipE2Result = shipE2.ship.reduce(function (accumulator, cV) {
-        return accumulator + cV;
-      });
-      let gameOver =
-        shipA5Result +
-        shipB4Result +
-        shipC3Result +
-        shipD3Result +
-        shipE2Result;
-      if (gameOver == -17) {
-        console.log("game over");
+      while (1) {
+        if (shipHitOrMiss(shipA5_PC)) {
+          break;
+        }
+
+        if (shipHitOrMiss(shipB4_PC)) {
+          break;
+        }
+
+        if (shipHitOrMiss(shipC3_PC)) {
+          break;
+        }
+
+        if (shipHitOrMiss(shipD3_PC)) {
+          break;
+        }
+
+        if (shipHitOrMiss(shipE2_PC)) {
+          break;
+        }
+        document.getElementById(currentClick).style.backgroundColor = "yellow";
+        document.getElementById(
+          "result-msg"
+        ).innerHTML = `Miss, ${currentClick}! Click grid for PC turn.`;
+        break;
       }
+
+      // Check if game over
+      checkGameOver(gameStatus);
+      gameStatus = -1;
+    } else if (gameStatus == -1) {
+      document.getElementById("error-msg").innerHTML = "";
+      document.getElementById("msg").innerHTML = `PC turn `;
+      let wasGuessed = false;
+      // let pcGuess_x = String.fromCharCode(Math.floor(Math.random() * 10) + 65);
+      // let pcGuess_y = Math.floor(Math.random() * 10).toString();
+      // pcGuess = pcGuess_x + pcGuess_y;
+      if (pcPastGuesses.length) {
+        while (!wasGuessed) {
+          let pcGuess_x = String.fromCharCode(
+            Math.floor(Math.random() * 10) + 65
+          );
+          let pcGuess_y = Math.floor(Math.random() * 10).toString();
+          pcGuess = pcGuess_x + pcGuess_y;
+          pcPastGuesses.forEach(function (currentValue) {
+            if (currentValue == pcGuess) {
+              wasGuessed = true;
+            }
+          });
+          if (wasGuessed) {
+            wasGuessed = false;
+          } else if (!wasGuessed) {
+            break;
+          }
+        }
+      } else {
+        let pcGuess_x = String.fromCharCode(
+          Math.floor(Math.random() * 10) + 65
+        );
+        let pcGuess_y = Math.floor(Math.random() * 10).toString();
+        pcGuess = pcGuess_x + pcGuess_y;
+      }
+
+      pcPastGuesses.push(pcGuess);
+      while (1) {
+        if (shipHitOrMiss(shipA5)) {
+          break;
+        }
+
+        if (shipHitOrMiss(shipB4)) {
+          break;
+        }
+
+        if (shipHitOrMiss(shipC3)) {
+          break;
+        }
+
+        if (shipHitOrMiss(shipD3)) {
+          break;
+        }
+
+        if (shipHitOrMiss(shipE2)) {
+          break;
+        }
+        document.getElementById(
+          "result-msg"
+        ).innerHTML = `Miss, ${pcGuess}! Your turn.`;
+        document.getElementById(pcGuess).innerHTML = "O";
+        break;
+      }
+      checkGameOver(gameStatus);
+      gameStatus = 1;
     }
   });
 });
@@ -713,6 +912,15 @@ document.querySelectorAll(".board-grid").forEach(function (currentValue) {
 document
   .getElementById("btn")
   .addEventListener("click", function (currentValue) {
-    gameStatus = 1;
-    this.remove();
+    if (!placingShips) {
+      gameStatus = 1;
+      document.getElementById("msg").innerHTML = "Your turn, pick a cell!";
+      this.remove();
+    } else if (placingShips == 1) {
+      document.getElementById("msg").innerHTML =
+        "Finish placing battleships before continuing. Click new position.";
+    } else if (placingShips == 2) {
+      document.getElementById("msg").innerHTML =
+        "Finish placing battleships before continuing. Click new direction.";
+    }
   });
