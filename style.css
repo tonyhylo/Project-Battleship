@@ -58,3 +58,26 @@ th, td {
 #btn {
     text-align: center;
 }
+
+#legend {
+    table-layout: fixed;
+    width: 90%;
+    height: 5vh;
+    border: 1px solid black;
+    border-collapse: collapse;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+}
+
+#user-ship-locations {
+    box-shadow: 0 0 0 5px purple inset;
+}
+
+#pc-ship-hit {
+    background-color: red;
+}
+
+#pc-ship-miss {
+    background-color: yellow;
+}

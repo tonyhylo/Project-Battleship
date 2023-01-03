@@ -10,6 +10,23 @@
 </head>
 <body>
     <h1>BATTLESHIP</h1>
+    <table id="legend">
+        <tbody>
+            <tr>
+                <td>User Ship Locations</td>
+                <td id="user-ship-locations"></td>
+                <td>User Ship Hit</td>
+                <td id="user-ship-hit">X</td>
+                <td>User Ship Miss</td>
+                <td id="user-ship-miss">O</td>
+                <td>PC Ship Hit</td>
+                <td id="pc-ship-hit"></td>
+                <td>PC Ship Miss</td>
+                <td id="pc-ship-miss"></td>
+            </tr>
+        </tbody>
+    </table>
+    <br>
     <table class="board">
         <thead>
             <tr class="headerCol">
@@ -29,11 +46,6 @@
         <tbody>
             <tr>
                 <th class="headerRow">0</th>
-                <!-- <td id="A0" style="background-color: gray;"></td>
-                <td id="B0" style="background-color: gray;"></td>
-                <td id="C0" style="background-color: gray;"></td>
-                <td id="D0" style="background-color: gray;"></td>
-                <td id="E0" style="background-color: gray;"></td> -->
                 <td id="A0" class="board-grid"></td>
                 <td id="B0" class="board-grid"></td>
                 <td id="C0" class="board-grid"></td>
@@ -47,11 +59,6 @@
             </tr>
             <tr>
                 <th class="headerRow">1</th>
-                <!-- <td id="A1" style="background-color: gray;"></td>
-                <td id="B1" style="background-color: gray;"></td>
-                <td id="C1" style="background-color: gray;"></td>
-                <td id="D1" style="background-color: gray;"></td>
-                <td id="E1" style="background-color: gray;"></td> -->
                 <td id="A1" class="board-grid"></td>
                 <td id="B1" class="board-grid"></td>
                 <td id="C1" class="board-grid"></td>
@@ -65,10 +72,6 @@
             </tr>
             <tr>
                 <th class="headerRow">2</th>
-                <!-- <td id="A2" style="background-color: gray;"></td>
-                <td id="B2" style="background-color: gray;"></td>
-                <td id="C2" style="background-color: gray;"></td>
-                <td id="D2" style="background-color: gray;"></td> -->
                 <td id="A2" class="board-grid"></td>
                 <td id="B2" class="board-grid"></td>
                 <td id="C2" class="board-grid"></td>
@@ -82,8 +85,6 @@
             </tr>
             <tr>
                 <th class="headerRow">3</th>
-                <!-- <td id="A3" style="background-color: gray;"></td>
-                <td id="B3" style="background-color: gray;"></td> -->
                 <td id="A3" class="board-grid"></td>
                 <td id="B3" class="board-grid"></td>
                 <td id="C3" class="board-grid"></td>
@@ -97,7 +98,6 @@
             </tr>
             <tr>
                 <th class="headerRow">4</th>
-                <!-- <td id="A4" style="background-color: gray;"></td> -->
                 <td id="A4" class="board-grid"></td>
                 <td id="B4" class="board-grid"></td>
                 <td id="C4" class="board-grid"></td>
@@ -186,11 +186,5 @@
     <div id="btn">
         <button>Continue</button>
     </div>
-    <!-- <div class="coin">
-        <p id="instruction1">Pick heads or tails to decide who goes first.</p>
-        <div id="heads">H</div>
-        <div id="tails">T</div>
-        <p id="result1"></p>
-    </div> -->
 </body>
 </html>
